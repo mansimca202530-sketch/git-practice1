@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Personal Dashboard</title>
+    <style>
+        body { background: #121212; color: white; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        #clock { font-size: 5rem; font-weight: bold; margin-bottom: 0; }
+        #date { font-size: 1.5rem; color: #888; margin-top: 0; margin-bottom: 2rem; }
+        .note-container { background: #1e1e1e; padding: 20px; border-radius: 15px; border: 1px solid #333; width: 400px; }
+        h3 { margin-top: 0; color: #00d2ff; }
+        textarea { width: 100%; height: 150px; background: transparent; border: none; color: #ddd; font-size: 1.1rem; resize: none; outline: none; }
+        .status { font-size: 0.8rem; color: #555; text-align: right; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="clock">00:00:00</div>
+    <div id="date">Loading Date...</div>
+
+    <div class="note-container">
+        <h3>📝 Quick Notes</h3>
+        <textarea id="noteArea" placeholder="Type something here... it saves automatically!"></textarea>
+        <div class="status" id="saveStatus">All notes saved locally</div>
+    </div>
+
+    <script>
+        // 1. Digital Clock Logic
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString();
+            document.getElementById('date').textContent = now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 2. Auto-Save Logic (Local Storage)
+        const noteArea = document.getElementById('noteArea');
+        const saveStatus = document.getElementById('saveStatus');
+
+        // Load saved note on startup
+        noteArea.value = localStorage.getItem('myDashboardNote') || "";
+
+        // Save on every keystroke
+        noteArea.addEventListener('input', () => {
+            localStorage.setItem('myDashboardNote', noteArea.value);
+            saveStatus.textContent = "Saving...";
+            setTimeout(() => { saveStatus.textContent = "All notes saved locally"; }, 500);
+        });
+    </script>
+</body>
+</html>
